@@ -60,6 +60,7 @@ return (
     <Button>I'm a default button in light mode</Button>
     <Button intent={Intent.primary}>I'm a primary button in light mode</Button>
     <Button intent={Intent.primary} mode={Mode.dark}>I'm a primary button in dark mode</Button>
+    <Button mode={Mode.dark}>I'm a default button in dark mode</Button>
   </>
 );
 
