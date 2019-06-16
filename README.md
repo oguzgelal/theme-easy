@@ -36,10 +36,9 @@ const buttonStyle = createStyle('button', theme => ({
 const stylesCombined = combineStyles(colorStyle, buttonStyle);
 
 // create the theme, set default values
-const theme = createTheme(stylesCombined, defaults: [
-  Intent.default,
-  Mode.light
-]);
+const theme = createTheme(stylesCombined, {
+  defaults: [ Intent.default, Mode.light ]
+});
 
 // use theme object (with api's attached) to style components
 // any method could be used to pass around the theme object,
