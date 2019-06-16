@@ -13,14 +13,19 @@ export default (id, themeFn, dependencies = []) => ({
   // executed at createTheme step after all the overrides
   resolve: theme => themeFn(theme),
 
-  // override function returns the style with resolve wrapped
-  // around a function with override object in its closure, and
-  // once executed it will merge the output of the theme function
-  // with the enclosed override object and return. override
-  // function could be called multiple times, in that case, the
-  // object passed on the later calls will have precendence over
-  // the ones before
-  override: function (obj) {
-    return { ...this, resolve: theme => merge(this.resolve(theme), obj) }
+  // returns the style with its resolver wrapped around a function
+  // with theme override function in its closure, once resolve gets
+  // executed, it will merge the output of the original theme function
+  // with the output of the theme override function and return. this
+  // function could be chained and called multiple times, in that case
+  // override functions passed on the later calls will have precendence
+  // over the ones before
+  override: function (themeOverrideFn) {
+    return Object.assign({}, this, {
+      resolve: theme => merge(
+        this.resolve(theme),
+        themeOverrideFn(theme)
+      )
+    })
   }
 })

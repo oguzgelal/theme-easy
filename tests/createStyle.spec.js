@@ -21,4 +21,21 @@ describe('createStyle should work properly', () => {
     expect(buttonTheme.background).toBe('#000');
   })
 
+  test('override should work', () => {
+    const buttonStyle = createStyle('button', theme => ({ background: theme.black }))
+      .override(theme => ({ background: theme.white }))
+
+    const buttonTheme = buttonStyle.resolve({ black: '#000', white: '#fff' });
+    expect(buttonTheme.background).toBe('#fff');
+  })
+
+  test('multiple overrides should work', () => {
+    const buttonStyle = createStyle('button', theme => ({ background: theme.black }))
+      .override(theme => ({ background: theme.white }))
+      .override(theme => ({ background: theme.red }))
+
+    const buttonTheme = buttonStyle.resolve({ black: '#000', white: '#fff', red: '#ff0000' });
+    expect(buttonTheme.background).toBe('#ff0000');
+  })
+
 })
