@@ -40,9 +40,9 @@ const theme = createTheme(stylesCombined, {
   defaults: [ Intent.default, Mode.light ]
 });
 
-// use theme object (with api's attached) to style components
+// use theme object (with api's attached) to style your components.
 // any method could be used to pass around the theme object,
-// example below uses styled-component's ThemeProvider
+// the example below uses styled-component's ThemeProvider
 
 return (
   <ThemeProvider theme={theme}>
@@ -53,6 +53,10 @@ return (
 const Button = styled.button`
   background-color: ${p => p.theme.get('button.bg', [p.intent, p.mode])};
   color: ${p => p.theme.get('button.color', [p.intent, p.mode])};
+
+  // with Proxies enabled
+  background-color: ${p => p.theme.button.bg(p.intent, p.mode)};
+  color: ${p => p.theme.button.color(p.intent, p.mode)};
 `;
 
 return (
