@@ -37,7 +37,13 @@ const stylesCombined = combineStyles(colorStyle, buttonStyle);
 
 // create the theme, set default values
 const theme = createTheme(stylesCombined, {
-  defaults: [ Intent.default, Mode.light ]
+  defaults: [ Intent.default, Mode.light ],
+  // this is function to find theme from given props.
+  // default behaviour is to look for `props.theme`, which is
+  // a convention used by mainstream css-in-js libraries such as
+  // styled-components and emotion. if this isn't the case, you
+  // can specify where TE can find the theme object.
+  findTheme: props => props.theme,
 });
 
 // use theme object (with api's attached) to style your components.
@@ -50,21 +56,25 @@ return (
   </ThemeProvider>
 );
 
-const Button = styled.button`
-  background-color: ${p => p.theme.get('button.bg', [p.intent, p.mode])};
-  color: ${p => p.theme.get('button.color', [p.intent, p.mode])};
+/*
+  without styled components, `t` function could be used by
+  providing theme and args like either one below:
+  ---
+  t('button.bg')({ theme, targs: [Intent.primary] })
+  t('button.bg', { theme, targs: [Intent.primary] })
+*/
 
-  // with Proxies enabled
-  background-color: ${p => p.theme.button.bg(p.intent, p.mode)};
-  color: ${p => p.theme.button.color(p.intent, p.mode)};
+const Button = styled.button`
+  background-color: ${t('button.bg')};
+  color: ${t('button.color')};
 `;
 
 return (
   <>
     <Button>I'm a default button in light mode</Button>
-    <Button intent={Intent.primary}>I'm a primary button in light mode</Button>
-    <Button intent={Intent.primary} mode={Mode.dark}>I'm a primary button in dark mode</Button>
-    <Button mode={Mode.dark}>I'm a default button in dark mode</Button>
+    <Button targs={Intent.primary}>I'm a primary button in light mode</Button>
+    <Button targs={[Intent.primary, Mode.dark]}>I'm a primary button in dark mode</Button>
+    <Button args={Mode.dark}>I'm a default button in dark mode</Button>
   </>
 );
 
