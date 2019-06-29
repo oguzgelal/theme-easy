@@ -27,7 +27,10 @@ const spacesScale = createStyle(_ => ({
 }));
 
 const colorStyle = createStyle(({ colors }) => ({
-  bw: { [Mode.dark]: colors.white, [Mode.light]: colors.black },
+  bw: {
+    [Mode.dark]: colors.white,
+    [Mode.light]: colors.black,
+  },
   danger: colors.reds[2],
   success: colors.green[2],
   primary: colors.blue[2]
@@ -35,28 +38,29 @@ const colorStyle = createStyle(({ colors }) => ({
   colors: colorScale
 });
 
-const breakpointStyle = createStyle(({ breakpoints }) => ({
-  small: breakpoints[0],
-  medium: breakpoints[1],
-  large: breakpoints[2],
+const breakpointStyle = createStyle(({ space }) => ({
+  small: space.breakpoints[0],
+  medium: space.breakpoints[1],
+  large: space.breakpoints[2],
 }), {
-  breakpoints: spacesScale.screenSizes
+  space: spacesScale
 });
 
-const fontSizeStyle = createStyle(({ fontSizes }) => ({
-  xs: fontSizes[0],
-  s: fontSizes[1],
-  m: fontSizes[2],
-  l: fontSizes[3],
-  xl: fontSizes[4],
-  xxl: fontSizes[5],
+const fontSizeStyle = createStyle(({ space }) => ({
+  xsmall: space.fontSizes[0],
+  small: space.fontSizes[1],
+  medium: space.fontSizes[2],
+  large: space.fontSizes[3],
+  xlarge: space.fontSizes[4],
+  xxlarge: space.fontSizes[5],
 }), {
-  fontSizes: spacesScale.fontSizes
+  space: spacesScale
 });
 
 // create a style for button
-const buttonStyle = createStyle(({ color }) => ({
+const buttonStyle = createStyle(({ color, fontSize }) => ({
   border: 'none',
+  fontSize: fontSize.medium,
   bg: {
     [Intent.primary]: color.primary,
     [Intent.default]: {
@@ -73,16 +77,15 @@ const buttonStyle = createStyle(({ color }) => ({
   }
 }), {
   color: colorStyle,
+  fontSize: fontSizeStyle,
 })
 
-// combine styles - order doesn't matter
-const stylesCombined = combineStyles({
-  colors: colorStyle,
-  button: buttonStyle
-});
-
 // create the theme
-const theme = createTheme(stylesCombined, {
+const theme = createTheme({
+  colors: colorStyle,
+  button: buttonStyle,
+  // ...
+}, {
   // set default values
   defaults: [ Intent.default, Mode.light ],
   // this is function to find theme from given props.
@@ -107,24 +110,22 @@ const Button = styled.button`
   background-color: ${t('button.bg')};
   color: ${t('button.color')};
 
-  /* if you need to use the props for some reason: */
-  background-color: ${p => p.whatever ? '' : t('button.bg', p)}
+  /* if you need to use the props: */
+  background-color: ${p => t('button.bg', p)}
 `;
 
 /*
-  without styled components, `t` function could be used by
+  without styled-components, `t` function could be used by
   providing theme and args like below:
-  ---
-  t('button.bg')({ theme, targs: [Intent.primary] }) // or:
-  t('button.bg', { theme, targs: [Intent.primary] })
+  t('button.bg', { theme, args: [Intent.primary] })
 */
 
 return (
   <>
     <Button>I'm a default button in light mode</Button>
-    <Button targs={Intent.primary}>I'm a primary button in light mode</Button>
-    <Button targs={[Intent.primary, Mode.dark]}>I'm a primary button in dark mode</Button>
-    <Button targs={Mode.dark}>I'm a default button in dark mode</Button>
+    <Button args={Intent.primary}>I'm a primary button in light mode</Button>
+    <Button args={[Intent.primary, Mode.dark]}>I'm a primary button in dark mode</Button>
+    <Button args={Mode.dark}>I'm a default button in dark mode</Button>
   </>
 );
 
